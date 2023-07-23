@@ -3,10 +3,15 @@ import React, { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTypedSelector } from '../hooks/useTypedSelector'
 import { RouteNames } from '../routes'
+import { AuthActionCreators } from '../store/reducers/auth/action-creaters'
+import { useDispatch } from 'react-redux'
+import { useActions } from '../hooks/useActions'
 
 export const Navbar: FC = () => {
   const router = useNavigate()
-  const {isAuth} = useTypedSelector(state => state.auth)
+  const {isAuth, user} = useTypedSelector(state => state.auth)
+  const {logout} = useActions()
+
   return (
     <Layout.Header>
       <Row justify='end'>
@@ -14,12 +19,12 @@ export const Navbar: FC = () => {
           ?
           <>
             <div style={{ color: 'white' }}>
-              Ulbi TV
+              {user.username}
             </div>
             <Menu theme="dark" mode="horizontal" selectable={false}>
 
               <Menu.Item
-                onClick={() => console.log("Выйти")}
+                onClick={logout}
                 key={1}
               >
                 Выйти
