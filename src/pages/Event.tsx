@@ -1,12 +1,22 @@
 import React, { FC, useState } from 'react'
 import { EventCalendar } from '../components/EventCalendar'
-import { Button, Modal, Row } from 'antd'
+import { Button, Layout, Modal, Row } from 'antd'
 import { EventForm } from '../components/EventForm'
+import { useEffect } from 'react';
+import { useActions } from '../hooks/useActions';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 
 export const Event: FC = () => {
   const [modalVisible, setModalVisible] = useState(false)
+  const {fetchGuests, createEvent} = useActions()
+  const {guests, events} = useTypedSelector (state => state.event )
+  useEffect(()=>{
+    fetchGuests()
+  }, [])
+
   return (
-    <div>
+    <Layout>
+      {JSON.stringify(events)}
       <EventCalendar events={[]}/>
       <Row justify="center">
         <Button
@@ -21,8 +31,11 @@ export const Event: FC = () => {
         footer={null}
         onCancel={()=> setModalVisible(false)}
       >
-      <EventForm/>
+      <EventForm
+      guests={guests}
+      submit={event => createEvent(event) }
+      />
       </Modal>
-    </div>
+    </Layout>
   )
 }
